@@ -1,0 +1,150 @@
+{{ 'digital.css' | asset_url | stylesheet_tag }}
+
+<style>
+  :root {
+    --items-hover-color: {{ section.settings.items_hover_color }};
+    --items-active-color: {{ section.settings.items_active_color }};
+  }
+</style>
+
+<section class="digital-fade-slider">
+  {% if section.settings.title != blank %}
+    <h2 class="digital-fade-slider__title">
+      {{ section.settings.title }}
+    </h2>
+  {% endif %}
+
+  <div class="digital-fade-slider__inner">
+    <!-- Left: Slider -->
+    <div class="digital-fade-slider__left swiper-container">
+      <div class="swiper-wrapper">
+        {% for block in section.blocks %}
+          <div class="swiper-slide">
+            <div
+              class="slide-background"
+              data-text-position="{{ block.settings.text_position }}"
+              style="background-image: url('{{ block.settings.image | image_url }}');"
+            >
+              <div class="slide-content">
+                <div class="richtext">{{ block.settings.text }}</div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Right: Category navigation -->
+    <div class="digital-fade-slider__right">
+      {% for block in section.blocks %}
+        <div
+          class="category-nav-item"
+          data-slide-index="{{ forloop.index0 }}"
+          data-block-bg="{{ block.settings.background_color }}"
+        >
+          {{ block.settings.category }}
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Navigation -->
+    {% if section.settings.show_navigation %}
+      <div class="digital-fade-slider__navigation">
+        <div class="digital-fade-slider__navigation-previous">
+          {% render 'icon-arrow-left' %}
+        </div>
+        <div class="digital-fade-slider__navigation-next">
+          {% render 'icon-arrow-right' %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<script src="{{ 'digital.js' |  asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Digital Fade Slider",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "no bullshit inside"
+    },
+    {
+      "type": "color",
+      "id": "items_hover_color",
+      "label": "Category Items Hover Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "items_active_color",
+      "label": "Category Items Active Color",
+      "default": "#fff"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "Show navigation",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "text",
+          "id": "category",
+          "label": "Category"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Background Image"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Slide Text"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Category Background Color",
+          "default": "#000000"
+        },
+        {
+          "type": "select",
+          "id": "text_position",
+          "label": "Text position",
+          "options": [
+            {
+              "value": "top",
+              "label": "Top"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "bottom",
+              "label": "Bottom"
+            }
+          ],
+          "default": "center"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Digital Fade Slider"
+    }
+  ]
+}
+{% endschema %}
